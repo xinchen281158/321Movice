@@ -8,11 +8,14 @@
     android:gravity="center"
     tools:context="com.example.robot.a321movie.Activity.SystemVideoPlayer">
 
-    <VideoView
+    <com.example.robot.a321movie.View.VideoView
         android:id="@+id/video_view"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     <include layout="@layout/media_controller"/>
-
+    <!--显示缓冲网速界面-->
+    <include layout="@layout/buffer" android:id="@+id/ll_buffer"/>
+    <!--加载视频等待界面-->
+    <include layout="@layout/ll_loading" android:id="@+id/ll_loading"/>
 </RelativeLayout>
