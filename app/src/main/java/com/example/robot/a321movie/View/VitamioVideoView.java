@@ -4,11 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
+import io.vov.vitamio.widget.*;
+
 /**
  * Created by robot on 2017/11/29.
  */
 
-public class VitamioVideoView extends android.widget.VideoView{
+public class VitamioVideoView extends io.vov.vitamio.widget.VideoView{
 
     public VitamioVideoView(Context context) {
         this(context,null);

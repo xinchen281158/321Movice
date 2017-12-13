@@ -1,15 +1,13 @@
 package com.example.robot.a321movie.Activity;
 
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.widget.RadioGroup;
 
 import com.example.robot.a321movie.Fragment.AudioFragment;
-import com.example.robot.a321movie.Fragment.BaseFragment;
+import com.example.robot.a321movie.Base.BaseFragment;
 import com.example.robot.a321movie.Fragment.NetAudioFragment;
 import com.example.robot.a321movie.Fragment.NetVideoFragment;
 import com.example.robot.a321movie.Fragment.VideoFragment;

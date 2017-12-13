@@ -6,7 +6,6 @@
  */
 package com.example.robot.a321movie.View;
 
-import me.maxwin.R;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -18,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.example.robot.a321movie.R;
+
 
 public class XListViewHeader extends LinearLayout {
 	private LinearLayout mContainer;

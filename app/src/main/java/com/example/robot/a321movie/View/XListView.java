@@ -8,7 +8,6 @@
  */
 package com.example.robot.a321movie.View;
 
-import me.maxwin.R;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -22,6 +21,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
+
+import com.example.robot.a321movie.R;
+
 
 public class XListView extends ListView implements OnScrollListener {
 

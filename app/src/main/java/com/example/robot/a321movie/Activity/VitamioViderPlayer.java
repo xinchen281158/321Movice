@@ -1,17 +1,19 @@
 package com.example.robot.a321movie.Activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -26,15 +28,18 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.example.robot.a321movie.R;
-import com.example.robot.a321movie.View.VideoView;
+import com.example.robot.a321movie.View.VitamioVideoView;
 import com.example.robot.a321movie.domain.MediaItem;
 import com.example.robot.a321movie.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+
+import io.vov.vitamio.Vitamio;
+import io.vov.vitamio.widget.VideoView;
 
 public class VitamioViderPlayer extends Activity implements View.OnClickListener{
 
@@ -44,7 +49,7 @@ public class VitamioViderPlayer extends Activity implements View.OnClickListener
     private static final int Progress=1;
     private static final int HIDE_MEDIACONTROLLER = 2;
     private static final int SHOW_SPEED=3;
-    private VideoView video_view;
+    private VitamioVideoView video_view;
     private Uri uri;
     private Utils utils;
 
@@ -160,6 +165,7 @@ public class VitamioViderPlayer extends Activity implements View.OnClickListener
      * (http://www.buzzingandroid.com/tools/android-layout-finder)
      */
     private void findViews() {
+        Vitamio.isInitialized(this);
         llBottom = (LinearLayout)findViewById( R.id.ll_bottom );
         tvName = (TextView)findViewById( R.id.tv_name );
         tv_duration = (TextView)findViewById( R.id.tv_duration );
@@ -177,7 +183,7 @@ public class VitamioViderPlayer extends Activity implements View.OnClickListener
         btnVideoStartPause = (Button)findViewById( R.id.btn_video_start_pause );
         btnVideoNext = (Button)findViewById( R.id.btn_video_next );
         btnVideoSiwchScreen = (Button)findViewById( R.id.btn_video_siwch_screen );
-        video_view = (VideoView) findViewById(R.id.video_view);
+        video_view = findViewById(R.id.vitamio_VideoView);
         rl_all = findViewById(R.id.rl_all);
         ll_buffer = findViewById(R.id.ll_buffer);
         ll_loading = findViewById(R.id.ll_loading);
@@ -259,7 +265,18 @@ public class VitamioViderPlayer extends Activity implements View.OnClickListener
             isMute=!isMute;
             updateVolume(currentVoice,isMute);
         } else if ( v == btnSwitchPlayer ) {
-            // Handle clicks for btnSwitchPlayer
+            // 点击切换到系统播放器
+            AlertDialog.Builder builder=new AlertDialog.Builder(this);
+            builder.setTitle("万能播放器提醒您");
+            builder.setMessage("当您播放视频卡顿播放不流畅的时候，请切换到系统播放器");
+            builder.setNegativeButton("取消", null);
+            builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startSwitchPlayer();
+                }
+            });
+            builder.show();
         } else if ( v == btnExit ) {
             // Handle clicks for btnExit
         } else if ( v == btnVideoPre ) {
@@ -276,6 +293,22 @@ public class VitamioViderPlayer extends Activity implements View.OnClickListener
             // 设置视频全屏和默认
             setFullScreenAndDefault();
         }
+    }
+
+    /**
+     * 由万能播放器切换到系统播放器
+     */
+    private void startSwitchPlayer() {
+        if(video_view!=null){
+            video_view.stopPlayback();
+        }
+        Intent intent = new Intent(VitamioViderPlayer.this, SystemVideoPlayer.class);
+        Bundle bundle=new Bundle();
+        bundle.putSerializable("videolist",mediaItems);
+        bundle.putInt("position",position);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        finish();
     }
 
     /**
@@ -395,7 +428,7 @@ public class VitamioViderPlayer extends Activity implements View.OnClickListener
 
                 case Progress:
                     //1、得到当前视频播放进程
-                    int currentPosition=video_view.getCurrentPosition();
+                    int currentPosition= (int) video_view.getCurrentPosition();
 
                     //2、获得当前进度
                     seekBarVideo.setProgress(currentPosition);
@@ -463,7 +496,7 @@ public class VitamioViderPlayer extends Activity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_system_video_player);
+        setContentView(R.layout.activity_vitamio_video_player);
 
         findViews();
 
@@ -486,7 +519,6 @@ public class VitamioViderPlayer extends Activity implements View.OnClickListener
 
     /**
      * 识别手势上下滑动改变音量
-     * @param event
      * @return
      */
 //    @Override
@@ -762,10 +794,10 @@ public class VitamioViderPlayer extends Activity implements View.OnClickListener
             }
         }
     }
-    class VideoOnInfoListener implements MediaPlayer.OnInfoListener{
+    class VideoOnInfoListener implements io.vov.vitamio.MediaPlayer.OnInfoListener{
 
         @Override
-        public boolean onInfo(MediaPlayer mp, int what, int extra) {
+        public boolean onInfo(io.vov.vitamio.MediaPlayer mp, int what, int extra) {
             switch (what){
                 case MediaPlayer.MEDIA_INFO_BUFFERING_START://视频卡了拖动卡
                     ll_buffer.setVisibility(View.VISIBLE);
@@ -799,30 +831,30 @@ public class VitamioViderPlayer extends Activity implements View.OnClickListener
         }
     }
 
-    class MyOnCompletionListener implements MediaPlayer.OnCompletionListener{
+    class MyOnCompletionListener implements io.vov.vitamio.MediaPlayer.OnCompletionListener{
 
         @Override
-        public void onCompletion(MediaPlayer mp) {
+        public void onCompletion(io.vov.vitamio.MediaPlayer mp) {
             //Toast.makeText(SystemVideoPlayer.this,"播放完成！",0).show();
             playNextVideo();
         }
     }
-    class MyOnErrorListener implements MediaPlayer.OnErrorListener{
+    class MyOnErrorListener implements io.vov.vitamio.MediaPlayer.OnErrorListener{
 
         @Override
-        public boolean onError(MediaPlayer mp, int what, int extra) {
+        public boolean onError(io.vov.vitamio.MediaPlayer mp, int what, int extra) {
             return false;
         }
     }
 
-    class MyOnPreparedListener implements MediaPlayer.OnPreparedListener{
+    class MyOnPreparedListener implements io.vov.vitamio.MediaPlayer.OnPreparedListener {
 
         //当底层解码准备好的时候
         @Override
-        public void onPrepared(MediaPlayer mp) {
+        public void onPrepared(io.vov.vitamio.MediaPlayer mp) {
             video_view.start();
             //开始播放
-            int duration=video_view.getDuration();//获得视频总时长
+            int duration= (int) video_view.getDuration();//获得视频总时长
             seekBarVideo.setMax(duration);
             tv_duration.setText(utils.stringForTime(duration));
             handler.sendEmptyMessage(Progress);

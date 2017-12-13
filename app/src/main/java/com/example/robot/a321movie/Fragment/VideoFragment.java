@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.robot.a321movie.Activity.SystemVideoPlayer;
 import com.example.robot.a321movie.Adapter.VideoAdapter;
+import com.example.robot.a321movie.Base.BaseFragment;
 import com.example.robot.a321movie.R;
 import com.example.robot.a321movie.domain.MediaItem;
 

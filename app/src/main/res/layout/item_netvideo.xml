@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+    <RelativeLayout
+        android:id="@+id/rl_image"
+        android:gravity="center_vertical"
+        android:layout_width="120dp"
+        android:layout_height="80dp">
+        <ImageView
+            android:id="@+id/iv_netVideo"
+            android:src="@drawable/video_default"
+            android:scaleType="fitXY"
+            android:layout_width="120dp"
+            android:layout_height="80dp" />
+        <ImageView
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/center_collect_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_toRightOf="@id/rl_image"
+        android:layout_marginLeft="8dp"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_netName"
+            android:text="视屏的名称"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/tv_netDesc"
+            android:text="视屏的描述"
+            android:textSize="15sp"
+            android:singleLine="true"
+            android:textColor="#55000000"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 </RelativeLayout>

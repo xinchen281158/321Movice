@@ -8,9 +8,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.robot.a321movie.R;
 import com.example.robot.a321movie.domain.MediaItem;
 import com.example.robot.a321movie.utils.Utils;
+
+import org.w3c.dom.Text;
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 
 import java.util.ArrayList;
 
@@ -20,20 +25,19 @@ import java.util.ArrayList;
 
 public class NetVideoAdapter extends BaseAdapter {
 
-    private ImageView iv_icon;
-    private TextView tv_name;
-    private TextView tv_time;
-    private TextView tv_size;
+    private ImageView iv_netVideo;
+
+    private TextView tv_netName;
+
+    private TextView tv_netDesc;
 
     private Context mContext;
     private ArrayList<MediaItem> mediaItems;
 
-    private Utils utils;
 
     public NetVideoAdapter(Context mContext, ArrayList<MediaItem> mediaItems) {
         this.mContext = mContext;
         this.mediaItems = mediaItems;
-        utils=new Utils();
     }
 
     @Override
@@ -53,20 +57,21 @@ public class NetVideoAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        convertView = convertView.inflate(mContext, R.layout.item_netvideo, null);
 
-            convertView = convertView.inflate(mContext, R.layout.lv_video, null);
-            iv_icon = convertView.findViewById(R.id.iv_icon);
-            tv_name = convertView.findViewById(R.id.tv_name);
-            tv_time = convertView.findViewById(R.id.tv_time);
-            tv_size = convertView.findViewById(R.id.tv_size);
-
-            //根据 position 得到列表中对应位置的数据
-            MediaItem mediaItem = mediaItems.get(position);
-            tv_name.setText(mediaItem.getName());
-            tv_time.setText(utils.stringForTime((int) mediaItem.getDuration()));
-            tv_size.setText(Formatter.formatFileSize(mContext, mediaItem.getSize()));
-            return convertView;
-        }
+        tv_netDesc=convertView.findViewById(R.id.tv_netDesc);
+        tv_netName=convertView.findViewById(R.id.tv_netName);
+        iv_netVideo=convertView.findViewById(R.id.iv_netVideo);
+        //根据 position 得到列表中对应位置的数据
+        MediaItem mediaItem = mediaItems.get(position);
+        //使用 xUtils3 绑定图片显示
+       // x.image().bind(iv_netVideo,mediaItem.getImageUrl());
+        //使用 Glide 绑定图片并显示
+        Glide.with(mContext).load(mediaItem.getImageUrl()).into(iv_netVideo);
+        tv_netDesc.setText(mediaItem.getDesc());
+        tv_netName.setText(mediaItem.getName());
+        return convertView;
+    }
 //    static class ViewHolder{
 //        ImageView iv_icon;
 //        TextView tv_name;

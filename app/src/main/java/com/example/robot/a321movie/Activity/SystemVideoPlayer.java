@@ -1,8 +1,10 @@
 package com.example.robot.a321movie.Activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
@@ -260,7 +262,8 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener{
             isMute=!isMute;
             updateVolume(currentVoice,isMute);
         } else if ( v == btnSwitchPlayer ) {
-            // Handle clicks for btnSwitchPlayer
+            // 点击感叹号按钮，切换播放器
+            showSwitchPlayerDialog();
         } else if ( v == btnExit ) {
             // Handle clicks for btnExit
         } else if ( v == btnVideoPre ) {
@@ -277,6 +280,23 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener{
             // 设置视频全屏和默认
             setFullScreenAndDefault();
         }
+    }
+
+    /**
+     * 点击切换不同播放器
+     */
+    private void showSwitchPlayerDialog() {
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("系统播放器提示您");
+        builder.setMessage("当您播放的视频没有声音的时候，请切换到万能播放器播放");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startVitamioPlayer();
+            }
+        });
+        builder.setNegativeButton("取消", null);
+        builder.show();
     }
 
     /**
@@ -812,8 +832,31 @@ public class SystemVideoPlayer extends Activity implements View.OnClickListener{
 
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
-            return false;
+            startVitamioPlayer();
+            return true;
         }
+    }
+
+    /**
+     * a、把数据传入 VitamioVideoPlayer 播放器
+     *b、关闭系统播放器
+     */
+    private void startVitamioPlayer() {
+        if(video_view!=null){
+            video_view.stopPlayback();
+        }
+        Intent intent = new Intent(SystemVideoPlayer.this, VitamioViderPlayer.class);
+        if(mediaItems!=null&&mediaItems.size()>0){
+            Bundle bundle=new Bundle();
+            bundle.putSerializable("videolist",mediaItems);
+            intent.putExtras(bundle);
+            intent.putExtra("position", position);
+        }else if(uri!=null){
+            intent.setData(uri);
+        }
+        startActivity(intent);
+        //关闭当前界面
+        finish();
     }
 
     class MyOnPreparedListener implements MediaPlayer.OnPreparedListener{

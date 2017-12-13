@@ -1,10 +1,11 @@
 package com.example.robot.a321movie.Fragment;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
+
+import com.example.robot.a321movie.Base.BaseFragment;
 
 /**
  * Created by robot on 2017/11/22.
